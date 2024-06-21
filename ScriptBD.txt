@@ -1,0 +1,65 @@
+-- Crear la base de datos
+CREATE DATABASE IF NOT EXISTS KFC_Restaurant;
+USE KFC_Restaurant;
+
+-- Tabla de Categoría de los Platos
+CREATE TABLE Categorias (
+    id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_categoria VARCHAR(50) NOT NULL
+);
+
+-- Tabla de Platos
+CREATE TABLE Platos (
+    id_plato INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_plato VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    precio DECIMAL(10, 2) NOT NULL,
+    imagen VARCHAR(255), -- Campo para la imagen del plato
+    id_categoria INT,
+    FOREIGN KEY (id_categoria) REFERENCES Categorias(id_categoria)
+);
+
+-- Tabla de Ingredientes
+CREATE TABLE Ingredientes (
+    id_ingrediente INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_ingrediente VARCHAR(100) NOT NULL
+);
+
+-- Tabla de Platos_Ingredientes (relación muchos a muchos entre Platos e Ingredientes)
+CREATE TABLE Platos_Ingredientes (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Clave primaria autoincremental
+    id_plato INT,
+    id_ingrediente INT,
+    cantidad VARCHAR(50),
+    FOREIGN KEY (id_plato) REFERENCES Platos(id_plato),
+    FOREIGN KEY (id_ingrediente) REFERENCES Ingredientes(id_ingrediente)
+);
+
+-- Tabla de Clientes
+CREATE TABLE Clientes (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_cliente VARCHAR(100) NOT NULL,
+    telefono_cliente VARCHAR(20),
+    email_cliente VARCHAR(100),
+    direccion_cliente VARCHAR(200)
+);
+
+-- Tabla de Pedidos
+CREATE TABLE Pedidos (
+    id_pedido INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT,
+    fecha_pedido DATETIME NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente)
+);
+
+-- Tabla de Detalles_Pedidos (relación muchos a muchos entre Pedidos y Platos)
+CREATE TABLE Detalles_Pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Clave primaria autoincremental
+    id_pedido INT,
+    id_plato INT,
+    cantidad INT NOT NULL,
+    precio_unitario DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES Pedidos(id_pedido),
+    FOREIGN KEY (id_plato) REFERENCES Platos(id_plato)
+);
